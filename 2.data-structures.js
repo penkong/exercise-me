@@ -2,9 +2,6 @@
 class Queue {
   constructor() {
     this.data = [];
-    // this.first = null;
-    // this.last = null;
-    // this.length = null;
   }
   add(record) {
     this.data.unshift(record);
@@ -12,11 +9,27 @@ class Queue {
   remove() {
     return this.data.pop();
   }
+  peek() {
+    return this.data[this.data.length - 1];
+  }
 }
-
-
+const Queue = require('./queue');
+//===========================================================
+//weaves
+function weaves(sourceOne, sourceTwo) {
+  const q = new Queue();
+  while (sourceOne.peek() || sourceTwo.peek()) {
+    if (sourceOne.peek()) {
+      q.add(sourceOne.remove());
+    }
+    if (sourceTwo.peek()) {
+      q.add(sourceTwo.remove());
+    }
+  }
+  return q;
+}
+///////
 //queue with ll
-
 class Node {
   constructor(value) {
     this.value = value;
@@ -54,36 +67,7 @@ class Queue {
     return temp.value;
   }
 }
-//===========================================================
-//weaves
-class Queue {
-  constructor() {
-    this.data = [];
-  }
-  add(record) {
-    this.data.unshift(record);
-  }
-  remove() {
-    return this.data.pop();
-  }
-  peek() {
-    return this.data[this.data.length - 1];
-  }
-}
-const Queue = require('./queue');
 
-function weaves(sourceOne, sourceTwo) {
-  const q = new Queue();
-  while (sourceOne.peek() || sourceTwo.peek()) {
-    if (sourceOne.peek()) {
-      q.add(sourceOne.remove());
-    }
-    if (sourceTwo.peek()) {
-      q.add(sourceTwo.remove());
-    }
-  }
-  return q;
-}
 //============================================================
 //stack 
 class Stack {
@@ -104,9 +88,7 @@ class Stack {
     // return this.top;
   }
 }
-
 //stack with ll
-
 class Node {
   constructor(value) {
     this.value = value;
@@ -343,9 +325,7 @@ function fromLast(list, n) {
   }
   return slow;
 }
-
 //single linked list
-
 class Node {
   constructor(val) {
     this.val = val;
@@ -482,7 +462,6 @@ list.push(201)
 list.push(250)
 list.push(350)
 list.push(999)
-
 // doubly link list 
 class Node {
   constructor(val) {
@@ -600,9 +579,7 @@ var list = new DoublyLinkedList()
 list.push("Harry")
 list.push("Ron")
 list.push("Hermione")
-
 //==============================================================
-
 //tree 
 class Node {
   constructor(data) {
@@ -655,6 +632,256 @@ DFS
 BFS
 
 //=======================================================
+//binary search tree
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+  }
+
+  insert(data) {
+    if (data < this.data && this.left) {
+      this.left.insert(data);
+    } else if (data < this.data) {
+      this.left = new Node(data);
+    } else if (data > this.data && this.right) {
+      this.right.insert(data);
+    } else if (data > this.data) {
+      this.right = new Node(data);
+
+    }
+  }
+
+  contains(data) {
+    if (this.data === data) {
+      return this;
+    }
+    if (this.data < data && this.right) {
+      return this.right.contains(data);
+    } else if (this.data > data && this.left) {
+      return this.left.contains(data);
+    }
+    return null;
+  }
+}
+//binary tree search validation
+function validate(node, min = null, max = null) {
+  if (max !== null && node.data > max) {
+    return false;
+  }
+  if (min !== null && node.data < min) {
+    return false;
+  }
+  if (node.left && !validate(node.left, min, node.data)) {
+    return false;
+  }
+  if (node.right && !validate(node.right, node.data, max)) {
+    return false;
+  }
+  return true;
+}
+//widthlvl
+function widthlvl(root) {
+  const arr = [root, 's'];
+  const counters = [0];
+  while (arr.length > 1) {
+    const node = arr.shift();
+    if (node === 's') {
+      counters.push(0);
+      arr.push('s');
+    } else {
+      arr.push(...node.children);
+      counters[counters.length - 1]++;
+    }
+  }
+  return counters;
+}
+//tree ll
+//bst
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
+  }
+}
+
+class BinarySearchTree {
+  constructor() {
+    this.root = null;
+  }
+  insert(value) {
+    var newNode = new Node(value);
+    if (this.root === null) {
+      this.root = newNode;
+      return this;
+    }
+    var current = this.root;
+    while (true) {
+      if (value === current.value) return undefined;
+      if (value < current.value) {
+        if (current.left === null) {
+          current.left = newNode;
+          return this;
+        }
+        current = current.left;
+      } else {
+        if (current.right === null) {
+          current.right = newNode;
+          return this;
+        }
+        current = current.right;
+      }
+    }
+  }
+  remove(value) {
+    if (!this.root) {
+      return false;
+    }
+    let current = this.root;
+    let parent = null;
+    while (current) {
+      if (value < current.value) {
+        parent = current;
+        current = current.left;
+      } else if (value > current.value) {
+        parent = current;
+        current = current.right;
+      } else if (current.value === value) {
+        //We have a match, get to work!
+        //Option 1: No right child: 
+        if (current.right === null) {
+          if (parent === null) {
+            this.root = current.left;
+          } else {
+            //if parent > current value, make current left child a child of parent
+            if (current.value < parent.value) {
+              parent.left = current.left;
+              //if parent < current value, make left child a right child of parent
+            } else if (current.value > parent.value) {
+              parent.right = current.left;
+            }
+          }
+        } else if (current.right.left === null) {
+          //Option 2: Right child which doesn't have a left child
+          if (parent === null) {
+            this.root = current.left;
+          } else {
+            current.right.left = current.left;
+            //if parent > current, make right child of the left the parent
+            if (current.value < parent.value) {
+              parent.left = current.right;
+              //if parent < current, make right child a right child of the parent
+            } else if (current.value > parent.value) {
+              parent.right = current.right;
+            }
+          }
+
+          //Option 3: Right child that has a left child
+        } else {
+
+          //find the Right child's left most child
+          let leftmost = current.right.left;
+          let leftmostParent = current.right;
+          while (leftmost.left !== null) {
+            leftmostParent = leftmost;
+            leftmost = leftmost.left;
+          }
+
+          //Parent's left subtree is now leftmost right subtree
+          leftmostParent.left = leftmost.right;
+          leftmost.left = current.left;
+          leftmost.right = current.right;
+
+          if (parent === null) {
+            this.root = leftmost;
+          } else {
+            if (current.value < parent.value) {
+              parent.left = leftmost;
+            } else if (current.value > parent.value) {
+              parent.right = leftmost;
+            }
+          }
+        }
+        return true;
+      }
+    }
+  }
+  lookup(value) {
+    if (!this.root) {
+      return false;
+    }
+    let currentNode = this.root;
+    while (currentNode) {
+      if (value < currentNode.value) {
+        currentNode = currentNode.left;
+      } else if (value > currentNode.value) {
+        currentNode = currentNode.right;
+      } else if (currentNode.value === value) {
+        return currentNode;
+      }
+    }
+    return null
+  }
+  BFS() {
+    // var node = this.root;
+    // queue.push(node);
+    var queue = [this.root];
+    var data = [];
+    while (queue.length) {
+      node = queue.shift();
+      data.push(node.value);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    return data;
+  }
+  DFSPreOrder() {
+    var data = [];
+
+    function traverse(node) {
+      data.push(node.value);
+      if (node.left) traverse(node.left);
+      if (node.right) traverse(node.right);
+    }
+    traverse(this.root);
+    return data;
+  }
+  DFSPostOrder() {
+    var data = [];
+
+    function traverse(node) {
+      if (node.left) traverse(node.left);
+      if (node.right) traverse(node.right);
+      data.push(node.value);
+    }
+    traverse(this.root);
+    return data;
+  }
+  DFSInOrder() {
+    var data = [];
+
+    function traverse(node) {
+      if (node.left) traverse(node.left);
+      data.push(node.value);
+      if (node.right) traverse(node.right);
+    }
+    traverse(this.root);
+    return data;
+  }
+}
+
+var tree = new BinarySearchTree();
+tree.insert(10);
+tree.insert(6);
+tree.insert(15);
+tree.insert(3);
+tree.insert(8);
+tree.insert(20);
+tree.DFSPreOrder();
+tree.DFSPostOrder();
+tree.DFSInOrder();
 //Binary search tree
 class Node {
   constructor(value) {
@@ -871,7 +1098,6 @@ console.log('DFSpost', tree.DFTPostOrder());
 //     9
 //  4     20
 //1  6  15  170
-
 function traverse(node) {
   const tree = {
     value: node.value
@@ -880,266 +1106,7 @@ function traverse(node) {
   tree.right = node.right === null ? null : traverse(node.right);
   return tree;
 }
-
-
-//binary search tree
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.left = null;
-    this.right = null;
-  }
-
-  insert(data) {
-    if (data < this.data && this.left) {
-      this.left.insert(data);
-    } else if (data < this.data) {
-      this.left = new Node(data);
-    } else if (data > this.data && this.right) {
-      this.right.insert(data);
-    } else if (data > this.data) {
-      this.right = new Node(data);
-
-    }
-  }
-
-  contains(data) {
-    if (this.data === data) {
-      return this;
-    }
-    if (this.data < data && this.right) {
-      return this.right.contains(data);
-    } else if (this.data > data && this.left) {
-      return this.left.contains(data);
-    }
-    return null;
-  }
-}
-//binary tree search validation
-function validate(node, min = null, max = null) {
-  if (max !== null && node.data > max) {
-    return false;
-  }
-  if (min !== null && node.data < min) {
-    return false;
-  }
-  if (node.left && !validate(node.left, min, node.data)) {
-    return false;
-  }
-  if (node.right && !validate(node.right, node.data, max)) {
-    return false;
-  }
-  return true;
-}
-
-//widthlvl
-function widthlvl(root) {
-  const arr = [root, 's'];
-  const counters = [0];
-  while (arr.length > 1) {
-    const node = arr.shift();
-    if (node === 's') {
-      counters.push(0);
-      arr.push('s');
-    } else {
-      arr.push(...node.children);
-      counters[counters.length - 1]++;
-    }
-  }
-  return counters;
-}
-
-//tree ll
-//bst
-
-//
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-  }
-}
-
-class BinarySearchTree {
-  constructor() {
-    this.root = null;
-  }
-  insert(value) {
-    var newNode = new Node(value);
-    if (this.root === null) {
-      this.root = newNode;
-      return this;
-    }
-    var current = this.root;
-    while (true) {
-      if (value === current.value) return undefined;
-      if (value < current.value) {
-        if (current.left === null) {
-          current.left = newNode;
-          return this;
-        }
-        current = current.left;
-      } else {
-        if (current.right === null) {
-          current.right = newNode;
-          return this;
-        }
-        current = current.right;
-      }
-    }
-  }
-  remove(value) {
-    if (!this.root) {
-      return false;
-    }
-    let current = this.root;
-    let parent = null;
-    while (current) {
-      if (value < current.value) {
-        parent = current;
-        current = current.left;
-      } else if (value > current.value) {
-        parent = current;
-        current = current.right;
-      } else if (current.value === value) {
-        //We have a match, get to work!
-        //Option 1: No right child: 
-        if (current.right === null) {
-          if (parent === null) {
-            this.root = current.left;
-          } else {
-            //if parent > current value, make current left child a child of parent
-            if (current.value < parent.value) {
-              parent.left = current.left;
-              //if parent < current value, make left child a right child of parent
-            } else if (current.value > parent.value) {
-              parent.right = current.left;
-            }
-          }
-        } else if (current.right.left === null) {
-          //Option 2: Right child which doesn't have a left child
-          if (parent === null) {
-            this.root = current.left;
-          } else {
-            current.right.left = current.left;
-            //if parent > current, make right child of the left the parent
-            if (current.value < parent.value) {
-              parent.left = current.right;
-              //if parent < current, make right child a right child of the parent
-            } else if (current.value > parent.value) {
-              parent.right = current.right;
-            }
-          }
-
-          //Option 3: Right child that has a left child
-        } else {
-
-          //find the Right child's left most child
-          let leftmost = current.right.left;
-          let leftmostParent = current.right;
-          while (leftmost.left !== null) {
-            leftmostParent = leftmost;
-            leftmost = leftmost.left;
-          }
-
-          //Parent's left subtree is now leftmost right subtree
-          leftmostParent.left = leftmost.right;
-          leftmost.left = current.left;
-          leftmost.right = current.right;
-
-          if (parent === null) {
-            this.root = leftmost;
-          } else {
-            if (current.value < parent.value) {
-              parent.left = leftmost;
-            } else if (current.value > parent.value) {
-              parent.right = leftmost;
-            }
-          }
-        }
-        return true;
-      }
-    }
-  }
-  lookup(value) {
-    if (!this.root) {
-      return false;
-    }
-    let currentNode = this.root;
-    while (currentNode) {
-      if (value < currentNode.value) {
-        currentNode = currentNode.left;
-      } else if (value > currentNode.value) {
-        currentNode = currentNode.right;
-      } else if (currentNode.value === value) {
-        return currentNode;
-      }
-    }
-    return null
-  }
-  BFS() {
-    // var node = this.root;
-    // queue.push(node);
-    var queue = [this.root];
-    var data = [];
-    while (queue.length) {
-      node = queue.shift();
-      data.push(node.value);
-      if (node.left) queue.push(node.left);
-      if (node.right) queue.push(node.right);
-    }
-    return data;
-  }
-  DFSPreOrder() {
-    var data = [];
-
-    function traverse(node) {
-      data.push(node.value);
-      if (node.left) traverse(node.left);
-      if (node.right) traverse(node.right);
-    }
-    traverse(this.root);
-    return data;
-  }
-  DFSPostOrder() {
-    var data = [];
-
-    function traverse(node) {
-      if (node.left) traverse(node.left);
-      if (node.right) traverse(node.right);
-      data.push(node.value);
-    }
-    traverse(this.root);
-    return data;
-  }
-  DFSInOrder() {
-    var data = [];
-
-    function traverse(node) {
-      if (node.left) traverse(node.left);
-      data.push(node.value);
-      if (node.right) traverse(node.right);
-    }
-    traverse(this.root);
-    return data;
-  }
-}
-
-
-var tree = new BinarySearchTree();
-tree.insert(10);
-tree.insert(6);
-tree.insert(15);
-tree.insert(3);
-tree.insert(8);
-tree.insert(20);
-tree.DFSPreOrder();
-tree.DFSPostOrder();
-tree.DFSInOrder();
-
 //===================================================
-
 /////////////////
 class MaxBinaryHeap {
   constructor() {
