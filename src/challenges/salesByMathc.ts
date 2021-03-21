@@ -1,7 +1,7 @@
 export const salesByMatch = (n: number, arr: number[]) => {
   let pair = 0;
-  const obj: any = {}
-  
+  const obj: {[key: string]: number} = {}
+
   for (let i= 0 ; i < n; i++) {
     obj[arr[i]] ? obj[arr[i]]++ : obj[arr[i]] = 1
   }
