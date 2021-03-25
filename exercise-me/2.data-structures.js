@@ -188,13 +188,10 @@ class LinkedList {
   }
   getLast() {
     let node = this.head;
-    if (!node) {
-      return;
-    }
+    if (!node) return;
+    
     while (node) {
-      if (!node.next) {
-        return node;
-      }
+      if (!node.next) return node;
       node = node.next;
     }
     //return this.getAt(this.size() -1);
@@ -203,25 +200,25 @@ class LinkedList {
     this.head = null;
   }
   removeFirst() {
-    if (!this.head) {
-      return;
-    }
+    if (!this.head) return;
     this.head = this.head.next;
   }
   removeLast() {
-    if (!this.head) {
-      return;
-    }
+    if (!this.head) return;
+    
     if (!this.head.next) {
       this.head = null;
       return;
     }
+
     let previous = this.head;
     let node = this.head.next;
+
     while (node.next) {
       previous = node;
       node = node.next;
     }
+
     previous.next = null;
   }
   insertLast(data) {
@@ -281,13 +278,15 @@ class LinkedList {
         counter++;
       }
     }
-    *[Symbol.iterator]() {
-      let node = this.head;
-      while (node) {
-        yield node;
-        node = node.next;
-      }
+  
+  *[Symbol.iterator]() {
+    let node = this.head;
+    while (node) {
+      yield node;
+      node = node.next;
     }
+  }
+    
 }
 
 function midPoint(list) {
@@ -596,6 +595,10 @@ class Node {
     });
   }
 }
+const node = new Node(1)
+const tree = new Tree()
+tree.root = node
+
 class Tree {
   constructor() {
     this.root = null;

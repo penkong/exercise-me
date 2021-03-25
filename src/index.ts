@@ -112,5 +112,6 @@
 // If you want to find the shortest path in a graph that has negative-weight edges, 
 // there’s an algorithm for that! It’s called the Bellman-Ford algorithm.
 
-import { palin } from './challenges/step';
-console.log(palin('fsfd'))
+import { plain } from './challenges/step';
+// console.log(plain('Hi there', 'by there'))
+console.log(plain('hamid mamid'))
